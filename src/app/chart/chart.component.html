@@ -5,9 +5,46 @@
         <div class="col col-4">
             <span class="dateTime">Today: <input type="date" value="{{ today | date : 'yyyy-MM-dd'}}"></span>
         </div>
+        <!-- Button to trigger modal -->
+        <div class="col col-2 mb-1">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#taskModal">
+            Add task
+          </button>
+        </div>
         <!-- Selected quarter div -->
         <div class="col col-md-6 d-flex justify-content-end align-items-center ">
             <span class="taskQuarter">2-kvartal 2020</span>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLongTitle">Add task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label for="taskName">Task name</label>
+                    <input type="text" class="form-control" id="taskName" #taskName>
+                  </div>
+                  <!-- Min and max date attribute -->
+                  <form>
+                    <label for="datemin">Enter a date after 2019-12-31:</label>
+                    <input type="date" id="taskStartDate" #taskStartDate name="taskStartDate" min="2020-01-01" max="2021-03-31"><br><br>
+
+                    <label for="datemax">Enter a date before 2021-04-01:</label>
+                    <input type="date" id="taskEndDate" #taskEndDate name="taskEndDate" min="2020-01-01" max="2021-03-31"><br><br>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="addTask(taskName.value, taskStartDate.value, taskEndDate.value)">Save changes</button>
+              </div>
+            </div>
+          </div>
         </div>
   </div>
   <!-- Chart -->
