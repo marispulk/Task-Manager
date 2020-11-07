@@ -138,26 +138,26 @@ export class ChartComponent implements OnInit {
     "headerfontcolor": "#ffffff",
     "headerfontsize": "12",
     "datacolumn": [{
-    "bgcolor": "#eeeeee",
-    "headertext": "Start{br}Date",
-    "text": [{ // Datatable: Start date labels
-    "label": "10/11/2020"
-    }, {
-    "label": "15/12/2020"
-    }, {
-    "label": "5/1/2021",
-    },]
+      "bgcolor": "#eeeeee",
+      "headertext": "Start{br}Date",
+      "text": [{ // Datatable: Start date labels
+      "label": "10/11/2020"
+      }, {
+      "label": "15/12/2020"
+      }, {
+      "label": "5/1/2021",
+      },]
 
     }, {
-    "bgcolor": "#eeeeee",
-    "headertext": "End{br}Date",
-    "text": [{ //Datatable: End date labels
-    "label": "15/11/2020"
-    }, {
-    "label": "25/12/2020",
-    }, {
-    "label": "15/1/2020",
-    }, ]
+      "bgcolor": "#eeeeee",
+      "headertext": "End{br}Date",
+      "text": [{ //Datatable: End date labels
+      "label": "15/11/2020"
+      }, {
+      "label": "25/12/2020",
+      }, {
+      "label": "15/1/2020",
+      }, ]
     }]
   };
 
@@ -242,4 +242,29 @@ export class ChartComponent implements OnInit {
    // Set to current date today
    today = new Date();
 
+   // Push process to array
+   addTask(taskName: string, taskStartDate: string, taskEndDate: string): void {
+    const maxValueOfY = Math.max(...this.processes.process.map(o => +o.id + 1), 0); // Get max id from processes.process array and add +1
+    this.processes.process.push({label: taskName, id: maxValueOfY.toString()}); // Converts number to string, as id value has to be string
+    this.datatable.datacolumn[0].text.push({label: taskStartDate}); // Pushes Start date to array
+    this.datatable.datacolumn[1].text.push({label: taskEndDate}); // Pushes End date to array
+    this.tasks.task.push({ // Pushes task color block to table
+    "label": taskName,
+    "processid":  maxValueOfY.toString(),
+    "start": taskStartDate,
+    "end": taskEndDate,
+    "id": maxValueOfY.toString() + "-1",
+    "color": "#008ee4",
+    "height": "76%",
+    "toppadding": "12%",
+    "bottompadding": "12%"
+    });
+    console.log(maxValueOfY);
+    console.log(this.processes.process);
+    console.log(this.datatable.datacolumn[0].text);
+    console.log(this.datatable.datacolumn[1].text);
+    console.log(this.tasks.task);
+
+   }
 }
+
