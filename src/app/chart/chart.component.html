@@ -1,0 +1,23 @@
+ <!-- Main container -->
+<div class="main-container">
+    <!-- Date div -->
+    <div class="d-flex align-items-center mt-3">
+        <div class="col col-4">
+            <span class="dateTime">Today: <input type="date" value="{{ today | date : 'yyyy-MM-dd'}}"></span>
+        </div>
+        <!-- Selected quarter div -->
+        <div class="col col-md-6 d-flex justify-content-end align-items-center ">
+            <span class="taskQuarter">2-kvartal 2020</span>
+        </div>
+  </div>
+  <!-- Chart -->
+  <fusioncharts
+    width="100%"
+    height="500"
+    type="gantt"
+    [dataSource]="dataSource">
+  </fusioncharts>
+</div>
+<div *ngFor="let task of tasks.task">
+{{task.label}}
+</div>
