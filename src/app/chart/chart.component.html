@@ -5,17 +5,80 @@
         <div class="col col-4">
             <span class="dateTime">Today: <input type="date" value="{{ today | date : 'yyyy-MM-dd'}}"></span>
         </div>
-        <!-- Button to trigger modal -->
+         <!-- Button to trigger edit Modal -->
+         <div class="col col-2 mb-1">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editTaskModal">
+              Edit task
+            </button>
+        </div>
+        <!-- Edit task Modal -->
+        <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editTaskModalTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editTaskModalLongTitle">Edit task</h5>
+                <p *ngIf="selectedTask"><span>You selected: </span><b>{{selectedTask}}</b></p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <!-- Dropdown task select -->
+              <div class="modal-body">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select task
+                    </button>
+                  <!-- Loop items into list -->
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li class="dropdown-item" *ngFor="let task of processes.process" (click)="selectTask(task)">{{ task.label }} </li>
+                  </ul>
+                </div>
+                <div *ngIf="selectedTaskObject">
+                  <form>
+                    <div class="form-group">
+                      <label for="editTaskName">Task name</label>
+                      <input type="text" class="form-control" id="editTaskName" #editTaskName value="{{ selectedTaskObject.label }}">
+                    </div>
+                    <!-- Min and max date attribute -->
+                      <label for="datemin">Enter a date after 2019-12-31:</label>
+                      <input type="date" id="editTaskStartDate" #editTaskStartDate name="editTaskStartDate" min="2020-01-01" max="2021-03-31" value="{{ selectedTaskObject.startDate }}"><br><br>
+
+                      <label for="datemax">Enter a date before 2021-04-01:</label>
+                      <input type="date" id="editTaskEndDate" #editTaskEndDate name="editTaskEndDate" min="2020-01-01" max="2021-03-31" value="{{ selectedTaskObject.endDate }}"><br><br>
+                  </form>
+                  {{ selectedTaskObject | json }}
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="deleteTask(selectedTaskObject.id)">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="updateTask(selectedTaskObject.id, editTaskName.value, editTaskStartDate.value, editTaskEndDate.value)">Save changes</button>
+
+                  </div>
+                </div>
+
+                  <!-- Edit task - Min and max date attribute -->
+                  <!-- <form>
+                    <label for="datemin">Enter a date after 2019-12-31:</label>
+                    <input type="date" id="taskStartDate" #taskStartDate name="taskStartDate" min="2020-01-01" max="2021-03-31"><br><br>
+
+                    <label for="datemax">Enter a date before 2021-04-01:</label>
+                    <input type="date" id="taskEndDate" #taskEndDate name="taskEndDate" min="2020-01-01" max="2021-03-31"><br><br>
+                  </form> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- Button to trigger task Modal -->
         <div class="col col-2 mb-1">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#taskModal">
             Add task
           </button>
         </div>
         <!-- Selected quarter div -->
-        <div class="col col-md-6 d-flex justify-content-end align-items-center ">
+        <div class="col col-md-6 d-flex justify-content-end align-items-center">
             <span class="taskQuarter">2-kvartal 2020</span>
         </div>
-        <!-- Modal -->
+        <!-- Add task Modal -->
         <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalTitle" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -26,22 +89,22 @@
                 </button>
               </div>
               <div class="modal-body">
-                  <div class="form-group">
-                    <label for="taskName">Task name</label>
-                    <input type="text" class="form-control" id="taskName" #taskName>
-                  </div>
-                  <!-- Min and max date attribute -->
                   <form>
-                    <label for="datemin">Enter a date after 2019-12-31:</label>
-                    <input type="date" id="taskStartDate" #taskStartDate name="taskStartDate" min="2020-01-01" max="2021-03-31"><br><br>
+                      <div class="form-group">
+                        <label for="taskName">Task name</label>
+                        <input type="text" class="form-control" id="taskName" #taskName>
+                      </div>
+                      <!-- Min and max date attribute -->
+                        <label for="datemin">Enter a date after 2019-12-31:</label>
+                        <input type="date" id="addTaskStartDate" #addTaskStartDate name="addTaskStartDate" min="2020-01-01" max="2021-03-31"><br><br>
 
-                    <label for="datemax">Enter a date before 2021-04-01:</label>
-                    <input type="date" id="taskEndDate" #taskEndDate name="taskEndDate" min="2020-01-01" max="2021-03-31"><br><br>
+                        <label for="datemax">Enter a date before 2021-04-01:</label>
+                        <input type="date" id="addTaskEndDate" #addTaskEndDate name="addTaskEndDate" min="2020-01-01" max="2021-03-31"><br><br>
                   </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" (click)="addTask(taskName.value, taskStartDate.value, taskEndDate.value)">Save changes</button>
+                <button type="button" class="btn btn-primary" (click)="addTask(taskName.value, addTaskStartDate.value, addTaskEndDate.value)">Save changes</button>
               </div>
             </div>
           </div>
@@ -54,7 +117,4 @@
     type="gantt"
     [dataSource]="dataSource">
   </fusioncharts>
-</div>
-<div *ngFor="let task of tasks.task">
-{{task.label}}
 </div>

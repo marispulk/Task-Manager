@@ -8,6 +8,9 @@ import * as FusionCharts from "fusioncharts";
 })
 export class ChartComponent implements OnInit {
 
+  selectedTask: string = '';
+  selectedTaskObject: any;
+
   categories = [{
     "bgcolor": "#999999",
     "category": [{
@@ -109,20 +112,24 @@ export class ChartComponent implements OnInit {
     "align": "left",
     "isbold": "1",
     "bgalpha": "25",
-    "process": [{
-    "label": "Clear site",
-    "id": "1"
-    }, {
-    "label": "Excavate Foundation",
-    "id": "2",
-    "hoverBandColor": "#e44a00",
-    "hoverBandAlpha": "40"
-    }, {
-    "label": "Concrete Foundation",
-    "id": "3",
-    "hoverBandColor": "#e44a00",
-    "hoverBandAlpha": "40"
-    }, ]
+    "process": [
+      {
+        "label": "Clear site",
+        "id": "1"
+      },
+      {
+        "label": "Excavate Foundation",
+        "id": "2",
+        "hoverBandColor": "#e44a00",
+        "hoverBandAlpha": "40"
+      },
+      {
+        "label": "Concrete Foundation",
+        "id": "3",
+        "hoverBandColor": "#e44a00",
+        "hoverBandAlpha": "40"
+      },
+    ]
   };
 
   datatable = {
@@ -137,64 +144,78 @@ export class ChartComponent implements OnInit {
     "headerbgcolor": "#999999",
     "headerfontcolor": "#ffffff",
     "headerfontsize": "12",
-    "datacolumn": [{
-      "bgcolor": "#eeeeee",
-      "headertext": "Start{br}Date",
-      "text": [{ // Datatable: Start date labels
-      "label": "10/11/2020"
-      }, {
-      "label": "15/12/2020"
-      }, {
-      "label": "5/1/2021",
-      },]
-
-    }, {
-      "bgcolor": "#eeeeee",
-      "headertext": "End{br}Date",
-      "text": [{ //Datatable: End date labels
-      "label": "15/11/2020"
-      }, {
-      "label": "25/12/2020",
-      }, {
-      "label": "15/1/2020",
-      }, ]
-    }]
+    "datacolumn": [
+      {
+        "bgcolor": "#eeeeee",
+        "headertext": "Start{br}Date",
+        "text": [
+          { // Datatable: Start date labels
+            "label": "2020-11-10",
+          },
+          {
+            "label": "2020-12-15",
+          },
+          {
+            "label": "2021-01-05",
+          },
+        ]
+      },
+      {
+        "bgcolor": "#eeeeee",
+        "headertext": "End{br}Date",
+        "text": [
+          { //Datatable: End date labels
+            "label": "2020-11-15",
+          },
+          {
+            "label": "2020-12-25",
+          },
+          {
+            "label": "2021-01-15",
+          },
+        ]
+      }
+    ]
   };
 
 
    //Different tasks of the process
   tasks = {
-    "task": [{
-    "label": "Task",
-    "processid": "1",
-    "start": "10/11/2020",
-    "end": "15/11/2020",
-    "id": "1-1",
-    "color": "#008ee4",
-    "height": "76%",
-    "toppadding": "12%",
-    "bottompadding": "12%"
-    }, {
-    "label": "Task",
-    "processid": "2",
-    "start": "15/12/2020",
-    "end": "25/12/2020",
-    "id": "2-1",
-    "color": "#008ee4",
-    "height": "76%",
-    "toppadding": "12%",
-    "bottompadding": "12%"
-    }, {
-    "label": "Task",
-    "processid": "3",
-    "start": "5/1/2021",
-    "end": "15/1/2021",
-    "id": "3-1",
-    "color": "#008ee4",
-    "height": "76%",
-    "toppadding": "12%",
-    "bottompadding": "12%"
-    },]
+    "task": [
+      {
+        "label": "Task",
+        "processid": "1",
+        "start": "10/11/2020",
+        "end": "15/11/2020",
+        "id": "1-1",
+        "color": "#008ee4",
+        "height": "76%",
+        "toppadding": "12%",
+        "bottompadding": "12%"
+      },
+      {
+        "label": "Task",
+        "processid": "2",
+        "start": "15/12/2020",
+        "end": "25/12/2020",
+        "id": "2-1",
+        "color": "#008ee4",
+        "height": "76%",
+        "toppadding": "12%",
+        "bottompadding": "12%"
+      },
+      {
+        "label": "Task",
+        "processid": "3",
+        "start": "5/1/2021",
+        "end": "15/1/2021",
+        "id": "3-1",
+        "color": "#008ee4",
+        "height": "76%",
+        "toppadding": "12%",
+        "bottompadding": "12%"
+      },
+    ]
   };
 
   dataSource: Object;
@@ -204,7 +225,7 @@ export class ChartComponent implements OnInit {
       "chart": {
       "theme": "fusion",
       "caption": "ShareCloud Task Manager",
-      "dateformat": "dd/mm/yyyy",
+      "dateformat": "dd-mm-yyyy",
       "outputdateformat": "ddds mns yy",
       "ganttwidthpercent": "60",
       "ganttPaneDuration": "40",
@@ -248,11 +269,15 @@ export class ChartComponent implements OnInit {
     this.processes.process.push({label: taskName, id: maxValueOfY.toString()}); // Converts number to string, as id value has to be string
     this.datatable.datacolumn[0].text.push({label: taskStartDate}); // Pushes Start date to array
     this.datatable.datacolumn[1].text.push({label: taskEndDate}); // Pushes End date to array
+
+    const taskStartDateNewFormat = new Date(taskStartDate);
+    const taskEndDateNewFormat = new Date(taskEndDate);
+
     this.tasks.task.push({ // Pushes task color block to table
     "label": taskName,
     "processid":  maxValueOfY.toString(),
-    "start": taskStartDate,
-    "end": taskEndDate,
+    "start": taskStartDateNewFormat.toLocaleDateString("en-GB"),
+    "end": taskEndDateNewFormat.toLocaleDateString("en-GB"),
     "id": maxValueOfY.toString() + "-1",
     "color": "#008ee4",
     "height": "76%",
@@ -266,5 +291,48 @@ export class ChartComponent implements OnInit {
     console.log(this.tasks.task);
 
    }
-}
+
+   selectTask (task: any) {
+    //update the ui
+    this.selectedTask = task.id;
+    this.selectedTask = task.label;
+
+    this.selectedTaskObject = {
+      id: task.id,
+      label: task.label,
+
+      startDate: this.datatable.datacolumn[0].text[task.id-1].label,
+      endDate: this.datatable.datacolumn[1].text[task.id-1].label,
+    }
+
+    console.log(this.selectedTask);
+
+  }
+  deleteTask(id: string): void {
+    console.log(id);
+    this.processes.process.splice(+id-1, 1);
+    this.datatable.datacolumn[0].text.splice(+id-1, 1);
+    this.datatable.datacolumn[1].text.splice(+id-1, 1);
+    this.tasks.task.splice(+id-1, 1);
+  }
+  updateTask(selectedTaskObjectID: string, editTaskName: string, editTaskStartDate: string, editTaskEndDate: string) {
+    console.log(editTaskName, editTaskStartDate, editTaskEndDate );
+
+    this.processes.process[+selectedTaskObjectID-1].label = editTaskName;
+
+    // variable datatable array datacolumn index 0
+    this.datatable.datacolumn[0].text[+selectedTaskObjectID-1].label = editTaskStartDate;
+    this.datatable.datacolumn[1].text[+selectedTaskObjectID-1].label = editTaskEndDate;
+
+    const taskStartDateNewFormat = new Date(editTaskStartDate);
+    const taskEndDateNewFormat = new Date(editTaskEndDate);
+
+    this.tasks.task[+selectedTaskObjectID-1].label = editTaskName;
+    this.tasks.task[+selectedTaskObjectID-1].start = taskStartDateNewFormat.toLocaleDateString("en-GB");
+    this.tasks.task[+selectedTaskObjectID-1].end = taskEndDateNewFormat.toLocaleDateString("en-GB");
+
+  }
+
+ }
+
 
