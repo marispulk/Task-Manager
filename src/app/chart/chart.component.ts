@@ -45,7 +45,7 @@ export class ChartComponent implements OnInit {
     "fontsize": "11",
     "align": "center",
     "category": [{
-      "start": "2/11/2020",
+      "start": "1/11/2020",
       "end": "8/11/2020",
       "label": "Week 45"
     },{
@@ -103,7 +103,7 @@ export class ChartComponent implements OnInit {
     "fontcolor": "#000000",
     "fontsize": "11",
     "isanimated": "1",
-    "bgcolor": "#6baa01",
+    "bgcolor": "#B8B8B8",
     "headervalign": "bottom",
     "headeralign": "left",
     "headerbgcolor": "#999999",
@@ -114,20 +114,16 @@ export class ChartComponent implements OnInit {
     "bgalpha": "25",
     "process": [
       {
-        "label": "Clear site",
+        "label": "Project start",
         "id": "1"
       },
       {
-        "label": "Excavate Foundation",
-        "id": "2",
-        "hoverBandColor": "#e44a00",
-        "hoverBandAlpha": "40"
+        "label": "Front-end development",
+        "id": "2"
       },
       {
-        "label": "Concrete Foundation",
-        "id": "3",
-        "hoverBandColor": "#e44a00",
-        "hoverBandAlpha": "40"
+        "label": "Back-end development",
+        "id": "3"
       },
     ]
   };
@@ -153,7 +149,7 @@ export class ChartComponent implements OnInit {
             "label": "2020-11-10",
           },
           {
-            "label": "2020-12-15",
+            "label": "2020-11-18",
           },
           {
             "label": "2021-01-05",
@@ -168,7 +164,7 @@ export class ChartComponent implements OnInit {
             "label": "2020-11-15",
           },
           {
-            "label": "2020-12-25",
+            "label": "2020-11-25",
           },
           {
             "label": "2021-01-15",
@@ -183,7 +179,7 @@ export class ChartComponent implements OnInit {
   tasks = {
     "task": [
       {
-        "label": "Task",
+        "label": "Project start",
         "processid": "1",
         "start": "10/11/2020",
         "end": "15/11/2020",
@@ -194,10 +190,10 @@ export class ChartComponent implements OnInit {
         "bottompadding": "12%"
       },
       {
-        "label": "Task",
+        "label": "Front-end development",
         "processid": "2",
-        "start": "15/12/2020",
-        "end": "25/12/2020",
+        "start": "18/11/2020",
+        "end": "25/11/2020",
         "id": "2-1",
         "color": "#008ee4",
         "height": "76%",
@@ -205,7 +201,7 @@ export class ChartComponent implements OnInit {
         "bottompadding": "12%"
       },
       {
-        "label": "Task",
+        "label": "Back-end development",
         "processid": "3",
         "start": "5/1/2021",
         "end": "15/1/2021",
@@ -224,7 +220,6 @@ export class ChartComponent implements OnInit {
     this.dataSource = {
       "chart": {
       "theme": "fusion",
-      "caption": "ShareCloud Task Manager",
       "dateformat": "dd-mm-yyyy",
       "outputdateformat": "ddds mns yy",
       "ganttwidthpercent": "60",
@@ -254,7 +249,7 @@ export class ChartComponent implements OnInit {
       "tooltext": "Completion of Phase 1"
       }]
       }
-          }; // end of this.dataSource
+    }; // end of this.dataSource
   }
 
   ngOnInit(): void {
@@ -264,35 +259,33 @@ export class ChartComponent implements OnInit {
    today = new Date();
 
    // Push process to array
-   addTask(taskName: string, taskStartDate: string, taskEndDate: string): void {
+  addTask(taskName: string, taskStartDate: string, taskEndDate: string): void {
     const maxValueOfY = Math.max(...this.processes.process.map(o => +o.id + 1), 0); // Get max id from processes.process array and add +1
-    this.processes.process.push({label: taskName, id: maxValueOfY.toString()}); // Converts number to string, as id value has to be string
-    this.datatable.datacolumn[0].text.push({label: taskStartDate}); // Pushes Start date to array
-    this.datatable.datacolumn[1].text.push({label: taskEndDate}); // Pushes End date to array
+    if(this.processes.process.length < 50){
+      this.processes.process.push({label: taskName, id: maxValueOfY.toString()}); // Converts number to string, as id value has to be string
+      this.datatable.datacolumn[0].text.push({label: taskStartDate}); // Pushes Start date to array
+      this.datatable.datacolumn[1].text.push({label: taskEndDate}); // Pushes End date to array
 
-    const taskStartDateNewFormat = new Date(taskStartDate);
-    const taskEndDateNewFormat = new Date(taskEndDate);
+      const taskStartDateNewFormat = new Date(taskStartDate);
+      const taskEndDateNewFormat = new Date(taskEndDate);
 
-    this.tasks.task.push({ // Pushes task color block to table
-    "label": taskName,
-    "processid":  maxValueOfY.toString(),
-    "start": taskStartDateNewFormat.toLocaleDateString("en-GB"),
-    "end": taskEndDateNewFormat.toLocaleDateString("en-GB"),
-    "id": maxValueOfY.toString() + "-1",
-    "color": "#008ee4",
-    "height": "76%",
-    "toppadding": "12%",
-    "bottompadding": "12%"
-    });
-    console.log(maxValueOfY);
-    console.log(this.processes.process);
-    console.log(this.datatable.datacolumn[0].text);
-    console.log(this.datatable.datacolumn[1].text);
-    console.log(this.tasks.task);
+      this.tasks.task.push({ // Pushes task color block to table
+      "label": taskName,
+      "processid":  maxValueOfY.toString(),
+      "start": taskStartDateNewFormat.toLocaleDateString("en-GB"),
+      "end": taskEndDateNewFormat.toLocaleDateString("en-GB"),
+      "id": maxValueOfY.toString() + "-1",
+      "color": "#008ee4",
+      "height": "76%",
+      "toppadding": "12%",
+      "bottompadding": "12%"
+      });
+    } else {
+      console.log("Max row 50");
+    }
+  }
 
-   }
-
-   selectTask (task: any) {
+  selectTask (task: any) {
     //update the ui
     this.selectedTask = task.id;
     this.selectedTask = task.label;
@@ -304,19 +297,16 @@ export class ChartComponent implements OnInit {
       startDate: this.datatable.datacolumn[0].text[task.id-1].label,
       endDate: this.datatable.datacolumn[1].text[task.id-1].label,
     }
-
-    console.log(this.selectedTask);
-
   }
+
   deleteTask(id: string): void {
-    console.log(id);
     this.processes.process.splice(+id-1, 1);
     this.datatable.datacolumn[0].text.splice(+id-1, 1);
     this.datatable.datacolumn[1].text.splice(+id-1, 1);
     this.tasks.task.splice(+id-1, 1);
   }
+
   updateTask(selectedTaskObjectID: string, editTaskName: string, editTaskStartDate: string, editTaskEndDate: string) {
-    console.log(editTaskName, editTaskStartDate, editTaskEndDate );
 
     this.processes.process[+selectedTaskObjectID-1].label = editTaskName;
 
@@ -333,6 +323,4 @@ export class ChartComponent implements OnInit {
 
   }
 
- }
-
-
+}
